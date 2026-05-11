@@ -1,0 +1,36 @@
+# Python virtual environment
+backend/.rag/
+backend/venv/
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Env files (keep .env.example)
+.env
+backend/.env
+
+# Data / models / indexes
+data/
+backend/bm25_index.json
+backend/app/bm25_index.json
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/.env*.local
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
