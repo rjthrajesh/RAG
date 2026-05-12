@@ -13,7 +13,7 @@ install:
 dev:
 	@echo "Starting backend and frontend in parallel..."
 	@trap 'kill 0' SIGINT; \
-	cd backend && $(UVICORN) app.main:app --reload --host 0.0.0.0 --port 8000 & \
+	PYTHONPATH=backend $(UVICORN) app.main:app --reload --host 0.0.0.0 --port 8000 & \
 	cd frontend && npm run dev & \
 	wait
 
