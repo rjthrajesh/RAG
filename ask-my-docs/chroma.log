@@ -1,0 +1,81 @@
+[33mWARNING[0m:  [14-05-2026 17:44:21] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048575. chroma_server_nofile will not be set.
+[32mINFO[0m:     [14-05-2026 17:44:21] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [14-05-2026 17:44:21] Starting component System
+[36mDEBUG[0m:    [14-05-2026 17:44:21] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [14-05-2026 17:44:21] Starting component SqliteDB
+[36mDEBUG[0m:    [14-05-2026 17:44:21] Starting component QuotaEnforcer
+[36mDEBUG[0m:    [14-05-2026 17:44:21] Starting component Posthog
+[36mDEBUG[0m:    [14-05-2026 17:44:21] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [14-05-2026 17:44:21] Starting component SegmentAPI
+[31mERROR[0m:    [14-05-2026 17:44:21] Failed to send telemetry event ServerStartEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [14-05-2026 17:44:21] Started server process [[36m7485[0m]
+[32mINFO[0m:     [14-05-2026 17:44:21] Waiting for application startup.
+[32mINFO[0m:     [14-05-2026 17:44:21] Application startup complete.
+[32mINFO[0m:     [14-05-2026 17:44:21] Uvicorn running on [1mhttp://localhost:8001[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [14-05-2026 17:46:27] ::1:53291 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [14-05-2026 17:46:27] ::1:53291 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[31mERROR[0m:    [14-05-2026 17:46:27] Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [14-05-2026 17:46:27] ::1:53292 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-05-2026 17:46:27] ::1:53292 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [14-05-2026 17:46:42] ::1:53292 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [14-05-2026 17:46:42] ::1:53292 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [14-05-2026 17:48:51] ::1:53447 - "DELETE /api/v1/collections/ask_my_docs?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[31mERROR[0m:    [14-05-2026 17:48:51] Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [14-05-2026 17:48:51] ::1:53447 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [14-05-2026 17:48:51] ::1:53447 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[36mDEBUG[0m:    [14-05-2026 17:48:51] Starting component PersistentLocalHnswSegment
+[31mERROR[0m:    [14-05-2026 17:48:52] Failed to send telemetry event CollectionAddEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [14-05-2026 17:48:52] ::1:53447 - "POST /api/v1/collections/30887146-9025-4a9e-9114-37e1a6e7ba09/add HTTP/1.1" 201
+[31mERROR[0m:    [14-05-2026 17:49:21] Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [14-05-2026 17:49:21] ::1:53447 - "POST /api/v1/collections/30887146-9025-4a9e-9114-37e1a6e7ba09/query HTTP/1.1" 200
+[32mINFO[0m:     [14-05-2026 17:54:46] ::1:53518 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [14-05-2026 17:54:46] ::1:53518 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [14-05-2026 17:57:53] ::1:53934 - "DELETE /api/v1/collections/ask_my_docs?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[31mERROR[0m:    [14-05-2026 17:57:53] Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [14-05-2026 17:57:53] ::1:53934 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[36mDEBUG[0m:    [14-05-2026 17:57:53] Starting component PersistentLocalHnswSegment
+[31mERROR[0m:    [14-05-2026 17:57:55] Failed to send telemetry event CollectionAddEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [14-05-2026 17:57:55] ::1:53934 - "POST /api/v1/collections/eb6bfa40-a2fc-44e5-9421-99da5a537dce/add HTTP/1.1" 201
+[31mERROR[0m:    [15-05-2026 15:08:13] Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 15:08:13] ::1:57168 - "POST /api/v1/collections/eb6bfa40-a2fc-44e5-9421-99da5a537dce/query HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 15:08:43] ::1:57184 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 15:08:43] ::1:57184 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 15:11:22] ::1:57261 - "DELETE /api/v1/collections/ask_my_docs?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[31mERROR[0m:    [15-05-2026 15:11:22] Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 15:11:22] ::1:57261 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[36mDEBUG[0m:    [15-05-2026 15:11:22] Starting component PersistentLocalHnswSegment
+[31mERROR[0m:    [15-05-2026 15:11:24] Failed to send telemetry event CollectionAddEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 15:11:24] ::1:57261 - "POST /api/v1/collections/4e9805e5-4d06-48b0-8065-100eca472e35/add HTTP/1.1" 201
+[31mERROR[0m:    [15-05-2026 15:14:42] Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 15:14:42] ::1:57278 - "POST /api/v1/collections/4e9805e5-4d06-48b0-8065-100eca472e35/query HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 15:37:02] ::1:57702 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 15:37:02] ::1:57702 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 15:50:35] ::1:58062 - "DELETE /api/v1/collections/ask_my_docs?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[31mERROR[0m:    [15-05-2026 15:50:35] Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 15:50:35] ::1:58062 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[36mDEBUG[0m:    [15-05-2026 15:50:36] Starting component PersistentLocalHnswSegment
+[31mERROR[0m:    [15-05-2026 15:50:39] Failed to send telemetry event CollectionAddEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 15:50:39] ::1:58062 - "POST /api/v1/collections/a6c188e7-e692-477f-8886-1675dbaa0b9a/add HTTP/1.1" 201
+[31mERROR[0m:    [15-05-2026 16:01:36] Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 16:01:36] ::1:58181 - "POST /api/v1/collections/a6c188e7-e692-477f-8886-1675dbaa0b9a/query HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:20:31] ::1:62862 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:20:31] ::1:62862 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[36mDEBUG[0m:    [15-05-2026 16:20:31] Collection ask_my_docs already exists, returning existing collection.
+[31mERROR[0m:    [15-05-2026 16:20:31] Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 16:20:31] ::1:62863 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:20:31] ::1:62863 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:20:31] ::1:62863 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:21:38] ::1:63140 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:21:38] ::1:63140 - "GET /api/v1 HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:23:58] ::1:63553 - "DELETE /api/v1/collections/ask_my_docs?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[31mERROR[0m:    [15-05-2026 16:23:58] Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 16:23:58] ::1:63553 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:23:58] ::1:63553 - "GET /api/v1/pre-flight-checks HTTP/1.1" 200
+[36mDEBUG[0m:    [15-05-2026 16:23:59] Starting component PersistentLocalHnswSegment
+[31mERROR[0m:    [15-05-2026 16:24:00] Failed to send telemetry event CollectionAddEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 16:24:00] ::1:63553 - "POST /api/v1/collections/79e2418b-c8c7-426c-889d-d289762ce0c5/add HTTP/1.1" 201
+[31mERROR[0m:    [15-05-2026 16:24:13] Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [15-05-2026 16:24:13] ::1:63553 - "POST /api/v1/collections/79e2418b-c8c7-426c-889d-d289762ce0c5/query HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:28:44] ::1:63653 - "POST /api/v1/collections/79e2418b-c8c7-426c-889d-d289762ce0c5/query HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:32:17] ::1:63670 - "POST /api/v1/collections/79e2418b-c8c7-426c-889d-d289762ce0c5/query HTTP/1.1" 200
+[32mINFO[0m:     [15-05-2026 16:37:50] ::1:63697 - "POST /api/v1/collections/79e2418b-c8c7-426c-889d-d289762ce0c5/query HTTP/1.1" 200
