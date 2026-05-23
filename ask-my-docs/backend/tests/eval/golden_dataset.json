@@ -1,0 +1,127 @@
+[
+  {
+    "question": "What is the difference between foundation models and traditional ML models?",
+    "ground_truth": "Foundation models are large models pretrained on massive, diverse datasets that can be adapted to many downstream tasks, whereas traditional ML models are trained from scratch for a specific narrow task with task-specific labeled data. Foundation models learn general representations that transfer broadly, while traditional models must be retrained entirely for each new task.",
+    "relevant_pages": [9, 10, 12, 39]
+  },
+  {
+    "question": "How does the author define AI engineering?",
+    "ground_truth": "AI engineering is the process of building applications on top of foundation models. It sits between traditional ML engineering and software engineering. Unlike traditional ML engineering that involves developing ML models from scratch, AI engineering leverages existing foundation models, combining prompt engineering, context construction, and evaluation pipelines to turn foundation models into reliable user-facing products.",
+    "relevant_pages": [12, 13, 14, 39, 40]
+  },
+  {
+    "question": "What is retrieval-augmented generation (RAG)?",
+    "ground_truth": "RAG is a technique that grounds a language model's responses in externally retrieved information. Before generating an answer, the system retrieves relevant documents from a knowledge base and injects them into the prompt as context. This reduces hallucination, keeps knowledge up to date without retraining, and makes sources verifiable. The term was coined in the 2020 paper 'Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks' by Lewis et al.",
+    "relevant_pages": [253, 254, 255, 256]
+  },
+  {
+    "question": "What is RLHF and how does it work?",
+    "ground_truth": "Reinforcement Learning from Human Feedback (RLHF) is a preference fine-tuning technique that aligns a model's outputs with human preferences. It has two main steps: first, a reward model is trained on human comparison data (pairs of responses where humans choose which is better); second, the language model is optimized to generate responses that receive high scores from the reward model. This builds on supervised fine-tuning (SFT) with demonstration data as a prior step.",
+    "relevant_pages": [80, 81, 82, 83, 84, 85, 86, 87]
+  },
+  {
+    "question": "What is a context window in the context of large language models?",
+    "ground_truth": "A context window is the maximum number of tokens a language model can process in a single forward pass. It is determined by the number of position indices tracked by the model's positional embedding. Everything the model can reason over must fit within this limit. Context length has expanded rapidly, from 1K tokens in early GPT models to 2M tokens in Gemini-1.5 Pro. Exceeding it causes the model to lose access to earlier content.",
+    "relevant_pages": [63, 218, 219]
+  },
+  {
+    "question": "How does the author recommend structuring a RAG pipeline?",
+    "ground_truth": "The author recommends first indexing documents by chunking them into manageable segments and storing them in a retrieval system (term-based or embedding-based). At query time, retrieve candidates using retrieval algorithms such as BM25 or embedding-based search, optionally combining both via ensemble methods like reciprocal rank fusion (RRF). Apply reranking to improve the ordering of results, then construct a prompt with the retrieved passages injected as context for the generative model.",
+    "relevant_pages": [256, 257, 261, 267, 268, 269, 270]
+  },
+  {
+    "question": "How should you evaluate LLM outputs when there is no single correct answer?",
+    "ground_truth": "For open-ended tasks, the author recommends using AI as a judge (LLM-as-a-judge), human evaluation, or a combination. AI judges are scalable, fast, and relatively cheap, and can work without reference data. Human evaluations capture nuance but are expensive. Reference-based metrics like BLEU or ROUGE are insufficient for generative tasks. Clear evaluation criteria—correctness, repetitiveness, toxicity, hallucinations, etc.—must be defined, and AI judges have been shown to agree with human evaluators around 85% of the time on benchmarks like MT-Bench.",
+    "relevant_pages": [136, 137, 138, 139]
+  },
+  {
+    "question": "What strategies does the book recommend for reducing hallucination?",
+    "ground_truth": "The book recommends several strategies: RAG to ground responses in retrieved evidence; reducing temperature for factual tasks to make the model more deterministic; prompting the model to say it doesn't know when uncertain; asking for concise responses to reduce the chance of generating fabricated content; RLHF-based training with better reward functions that penalize making things up; and self-verification techniques like SelfCheckGPT that detect inconsistency across multiple generated outputs.",
+    "relevant_pages": [107, 108, 109, 110, 111]
+  },
+  {
+    "question": "When should you choose RAG over fine-tuning?",
+    "ground_truth": "RAG is preferred when the model's failures are information-based—the model lacks the knowledge or has outdated information. Fine-tuning is better when failures are behavior-based—the model doesn't follow the right format, style, or reasoning pattern. The author notes RAG and fine-tuning are complementary; using RAG on top of a fine-tuned model can further boost performance. RAG should typically be tried first since it requires less infrastructure investment.",
+    "relevant_pages": [316, 317, 318]
+  },
+  {
+    "question": "How does the book recommend handling documents that exceed the context window length?",
+    "ground_truth": "The book recommends chunking long documents into smaller segments that fit within the context window. Common chunking strategies include splitting by fixed length (characters, words, sentences, paragraphs) or recursive splitting using increasingly smaller units. Chunk size and overlap must be tuned: smaller chunks allow more diversity but risk losing information; larger chunks preserve context but reduce the number of chunks that can fit. There is no universal best chunk size and experimentation is necessary.",
+    "relevant_pages": [257, 268, 269]
+  },
+  {
+    "question": "How does RLHF differ from RLAIF according to the book?",
+    "ground_truth": "The book describes RLHF as using human annotators to compare model outputs and build a reward model from their preferences. To reduce cost and scale, some teams turn to AI-generated data (synthetic data) instead of human annotation. RLAIF replaces human annotators with an AI model to generate preference labels. RLAIF is cheaper and faster to scale but inherits the biases of the AI judge, while RLHF benefits from genuine human judgment.",
+    "relevant_pages": [83, 84, 85]
+  },
+  {
+    "question": "How does RAG compare to fine-tuning in terms of knowledge updatability?",
+    "ground_truth": "RAG is far easier to keep current: updating the knowledge base requires only re-indexing new documents without any model training. Fine-tuning bakes knowledge into model weights, requiring another expensive training run for new information. Research by Ovadia et al. (2024) showed that RAG outperforms fine-tuning for question-answering about current events across multiple models including Mistral-7B, Llama 2-7B, and Orca 2-7B.",
+    "relevant_pages": [316, 317, 318]
+  },
+  {
+    "question": "What are the tradeoffs between closed-source and open-source models according to the book?",
+    "ground_truth": "Closed-source (commercial) model APIs offer higher capability, managed inference infrastructure, and rapid iteration but carry API costs, data privacy concerns, risk of losing access, and lack of transparency in model updates causing vendor lock-in. Open-source models can be self-hosted for privacy, cost control, and full customization including fine-tuning, but require significant infrastructure investment and typically lag behind frontier proprietary model capability.",
+    "relevant_pages": [181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191]
+  },
+  {
+    "question": "How does semantic search differ from keyword search in the context of RAG?",
+    "ground_truth": "Keyword (term-based) search uses algorithms like BM25 that match exact or near-exact terms and works well out of the box, especially for named entities and specific phrases. Semantic (embedding-based) search converts queries and documents into dense vector embeddings and retrieves by conceptual similarity, capturing paraphrases that keyword search misses. The author recommends combining both approaches as an ensemble using reciprocal rank fusion (RRF) to get the benefits of both.",
+    "relevant_pages": [258, 259, 260, 261, 264, 267]
+  },
+  {
+    "question": "How does prompt engineering compare to fine-tuning for adapting model behavior?",
+    "ground_truth": "Prompt engineering is the recommended first step as it requires no training infrastructure and is fast and cheap. Fine-tuning should only be attempted after extensive prompt experiments, as it requires significant resources in data, hardware, and ML expertise. The two approaches are not mutually exclusive; many practitioners find that what seemed like a fine-tuning problem was actually a poorly designed prompting experiment. Fine-tuning is better for deeply changing model behavior, style, or output format.",
+    "relevant_pages": [311, 313, 314]
+  },
+  {
+    "question": "What does the book say about the effect of sampling temperature on LLM output?",
+    "ground_truth": "Temperature is a constant that adjusts logits before the softmax transformation during token sampling. A higher temperature reduces the probability of common tokens and increases diversity, making outputs more creative but potentially less coherent. A lower temperature (approaching 0) makes the model more deterministic, always picking the most probable token. Setting temperature to 0 is recommended for factual and consistent tasks; higher temperatures suit creative generation.",
+    "relevant_pages": [90, 91, 92]
+  },
+  {
+    "question": "What does the book say about top-p (nucleus) sampling?",
+    "ground_truth": "Top-p sampling selects the next token from the smallest set of tokens whose cumulative probability exceeds p, unlike top-k which uses a fixed count. This makes top-p adaptive: when the model is confident, the nucleus is small; when uncertain, it is large. A related strategy is min-p, which sets a minimum probability threshold for a token to be considered. Despite limited theoretical benefits, top-p sampling has proven to work well in practice and is widely adopted.",
+    "relevant_pages": [94, 95]
+  },
+  {
+    "question": "How does tokenization affect how models process text?",
+    "ground_truth": "Tokenizers split text into subword units rather than whole words or characters. A token can be a character, a word, or a part of a word depending on the model. The same text can have different token counts across models due to different vocabularies. Context window limits are measured in tokens, so understanding tokenization matters for prompt design and cost estimation. Tokens also help models process unknown words by breaking them into meaningful subcomponents.",
+    "relevant_pages": [3, 4]
+  },
+  {
+    "question": "What evaluation benchmarks does the book discuss for foundation models?",
+    "ground_truth": "The book discusses MMLU (measuring knowledge and reasoning across 57 subjects), HumanEval (for code generation functional correctness), HellaSwag (commonsense reasoning for sentence completion), TruthfulQA (measuring factually consistent and non-misleading responses), WinoGrande (pronoun resolution requiring commonsense reasoning), and GSM-8K (grade school math problems). The author warns against benchmark saturation and data contamination where models train on benchmark data.",
+    "relevant_pages": [169, 192, 193, 194, 195]
+  },
+  {
+    "question": "What are the main causes of hallucination in large language models?",
+    "ground_truth": "The book identifies two main hypotheses: first, self-delusion where a language model cannot differentiate between user-provided input and its own generated tokens, causing it to treat fabricated statements as facts and build upon them (snowballing hallucinations); second, mismatched internal knowledge where models are trained during SFT to mimic labeler responses that use knowledge the model doesn't have, effectively teaching it to hallucinate. Both hypotheses complement each other.",
+    "relevant_pages": [105, 107, 108, 109, 110]
+  },
+  {
+    "question": "What are common failure modes in RAG retrieval?",
+    "ground_truth": "The book identifies several retrieval failure modes: term-based retrieval misses paraphrased queries that don't share exact keywords with the document; embedding-based retrieval can obscure specific keywords like error codes or product names; chunking can split relevant information across chunk boundaries; top-k truncation may omit the relevant passage if it falls outside the retrieved window; and query ambiguity in multi-turn conversations can cause irrelevant retrieval without query rewriting.",
+    "relevant_pages": [257, 260, 264, 268, 269, 270]
+  },
+  {
+    "question": "What does the book say about prompt injection attacks?",
+    "ground_truth": "Prompt injection refers to attacks where malicious instructions are injected into user prompts or tool outputs to override system instructions. Direct injection places malicious content in user messages; indirect injection places it in external sources the model retrieves (e.g., web pages, emails, databases). Defenses include input/output filtering, instruction hierarchy (where system prompts have higher priority than user inputs, and tool outputs have lowest priority), and fine-tuning models to recognize and resist misaligned instructions.",
+    "relevant_pages": [238, 242, 243, 248, 249]
+  },
+  {
+    "question": "How does the book describe model performance degradation over time?",
+    "ground_truth": "The book describes drift as changes caused by system prompt updates, user behavior changes over time, and underlying model updates by API providers that may not be disclosed. Unlike hard failures, drift degrades quality gradually and is only caught through continuous monitoring. The author recommends tracking metrics over time with appropriate granularity (by user, release, prompt version), using logs and traces, and designing evaluation pipelines that closely align with monitoring metrics.",
+    "relevant_pages": [465, 466, 471, 472]
+  },
+  {
+    "question": "What problems arise when a user query exceeds the available context window?",
+    "ground_truth": "When input exceeds the context window, content must be truncated or managed carefully. Additionally, research shows models perform much better at understanding instructions at the beginning and end of a prompt than in the middle (the 'lost in the middle' problem tested via needle-in-a-haystack evaluations). Solutions include RAG to retrieve only the most relevant context, query rewriting for multi-turn sessions, and chunking strategies to process long documents in manageable segments.",
+    "relevant_pages": [218, 219, 220]
+  },
+  {
+    "question": "What role do AI agents play in AI engineering according to the book?",
+    "ground_truth": "AI agents are LLM-powered systems that can perceive their environment and take multi-step actions using tools (web search, SQL executors, code interpreters, APIs) to complete goals. The success of an agent depends on its tool inventory and planning capabilities. Key engineering challenges include compound mistakes over many steps (accuracy degrades with each step), tool reliability, higher stakes from write actions, planning failures, and efficiency. Evaluation requires identifying agent-specific failure modes across planning, tool use, and task completion.",
+    "relevant_pages": [275, 276, 277, 278, 279, 280, 281, 282, 298, 299, 300]
+  }
+]

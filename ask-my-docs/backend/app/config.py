@@ -1,11 +1,28 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Walk up from this file to find the nearest .env (covers both
+# "run from backend/" and "run from ask-my-docs/" working directories).
+_HERE = Path(__file__).resolve().parent
+_ENV_CANDIDATES = [_HERE.parent / ".env", _HERE.parent.parent / ".env"]
+_ENV_FILE = next((str(p) for p in _ENV_CANDIDATES if p.exists()), ".env")
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=_ENV_FILE, env_file_encoding="utf-8")
+    # LLM provider: "ollama" | "groq"
+    llm_provider: str = "ollama"
+
     # Ollama
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "llama3.1:8b"
+
+    # Groq
+    groq_api_key: str = ""
+    groq_model: str = "llama-3.1-8b-instant"
+    # Judge model for RAGAS evaluation (needs to handle complex nested JSON schemas)
+    groq_judge_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
 
     # ChromaDB
     chroma_host: str = "localhost"

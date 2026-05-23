@@ -16,7 +16,7 @@ from pydantic import BaseModel
 
 from app.config import settings
 from app.generation.citation_validator import CitationValidator
-from app.generation.llm_client import OllamaClient
+from app.generation.llm_client import GroqClient, OllamaClient
 from app.generation.prompt_builder import PromptBuilder
 from app.ingestion.chunker import RecursiveChunker
 from app.ingestion.embedder import Embedder
@@ -87,13 +87,19 @@ def _get_reranker() -> CrossEncoderReranker:
     return _reranker
 
 
-def _get_llm_client() -> OllamaClient:
+def _get_llm_client() -> OllamaClient | GroqClient:
     global _llm_client
     if _llm_client is None:
-        _llm_client = OllamaClient(
-            base_url=settings.ollama_base_url,
-            model=settings.ollama_model,
-        )
+        if settings.llm_provider == "groq":
+            _llm_client = GroqClient(
+                api_key=settings.groq_api_key,
+                model=settings.groq_model,
+            )
+        else:
+            _llm_client = OllamaClient(
+                base_url=settings.ollama_base_url,
+                model=settings.ollama_model,
+            )
     return _llm_client
 
 
