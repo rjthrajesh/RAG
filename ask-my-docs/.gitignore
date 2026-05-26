@@ -20,6 +20,11 @@ backend/.env
 data/
 backend/bm25_index.json
 backend/app/bm25_index.json
+backend/eval_report.json
+
+#logs
+chroma.log
+.log
 
 # Node / Next.js
 frontend/node_modules/
