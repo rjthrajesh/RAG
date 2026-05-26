@@ -11,6 +11,7 @@ from typing import Any, AsyncIterator
 
 import httpx
 from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
@@ -29,6 +30,17 @@ from app.retrieval.vector_store import VectorStore
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Ask My Docs", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "rag-xi-ashy.vercel.app",  # replace with your actual Vercel URL
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # In-memory job registry — single-user system, no persistence needed
 _jobs: dict[str, dict[str, Any]] = {}
