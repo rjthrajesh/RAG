@@ -35,7 +35,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "rag-xi-ashy.vercel.app",  # replace with your actual Vercel URL
+        "rag-xi-ashy.vercel.app",  
     ],
     allow_credentials=True,
     allow_methods=["*"],
