@@ -1,0 +1,10 @@
+# Eval-only dependencies — installed in CI, not on the production server.
+# Install with: pip install -r requirements.txt -r requirements-eval.txt
+sentence-transformers==3.0.1
+transformers==4.41.2
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.3.1+cpu
+ragas==0.1.9
+langchain-core==0.2.5
+langchain-community>=0.2.0
+datasets>=2.20.0

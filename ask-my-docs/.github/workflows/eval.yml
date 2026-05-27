@@ -55,7 +55,7 @@ jobs:
           key: hf-${{ env.EMBED_MODEL_NAME }}-${{ runner.os }}
 
       - name: Install Python dependencies
-        run: pip install -r backend/requirements.txt
+        run: pip install -r backend/requirements.txt -r backend/requirements-eval.txt
 
       - name: Check PDF fixture exists
         run: |
