@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     chroma_port: int = 8001
 
     # Embedding
-    embed_model_name: str = "BAAI/bge-large-en-v1.5"
+    embed_model_name: str = "BAAI/bge-base-en-v1.5"
 
     # Chunking
     chunk_size: int = 512

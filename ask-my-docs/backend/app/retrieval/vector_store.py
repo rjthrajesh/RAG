@@ -39,21 +39,26 @@ class VectorStore:
             metadata={"hnsw:space": "cosine"},
         )
 
+    _WRITE_BATCH = 500
+
     def add_chunks(self, chunks: list[Chunk], embeddings: list[list[float]]) -> None:
-        self._collection.add(
-            ids=[c.chunk_id for c in chunks],
-            documents=[c.text for c in chunks],
-            embeddings=embeddings,
-            metadatas=[
-                {
-                    "page_number": c.page_number,
-                    "section_title": c.section_title or "",
-                    "chunk_id": c.chunk_id,
-                    "parent_text": c.parent_text,
-                }
-                for c in chunks
-            ],
-        )
+        metadatas = [
+            {
+                "page_number": c.page_number,
+                "section_title": c.section_title or "",
+                "chunk_id": c.chunk_id,
+                "parent_text": c.parent_text,
+            }
+            for c in chunks
+        ]
+        for i in range(0, len(chunks), self._WRITE_BATCH):
+            batch_chunks = chunks[i : i + self._WRITE_BATCH]
+            self._collection.add(
+                ids=[c.chunk_id for c in batch_chunks],
+                documents=[c.text for c in batch_chunks],
+                embeddings=embeddings[i : i + self._WRITE_BATCH],
+                metadatas=metadatas[i : i + self._WRITE_BATCH],
+            )
         logger.info("Stored %d chunks in ChromaDB", len(chunks))
 
     def query(self, query_embedding: list[float], top_k: int) -> list[RetrievalResult]:

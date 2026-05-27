@@ -10,7 +10,7 @@ from app.ingestion.chunker import Chunk
 logger = logging.getLogger(__name__)
 
 _BGE_QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
-_BATCH_SIZE = 32
+_BATCH_SIZE = 128
 
 
 class Embedder:
