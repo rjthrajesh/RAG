@@ -99,7 +99,7 @@ CHROMA_HOST=localhost
 CHROMA_PORT=8001
 
 # Embeddings & chunking
-EMBED_MODEL_NAME=BAAI/bge-large-en-v1.5
+EMBED_MODEL_NAME=BAAI/bge-base-en-v1.5
 CHUNK_SIZE=512
 CHUNK_OVERLAP=64
 
