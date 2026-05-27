@@ -136,7 +136,16 @@ def _run_ingestion(job_id: str, pdf_path: str) -> None:
 
         _jobs[job_id]["progress"] = 0.50
         embedder = _get_embedder()
-        chunk_embeddings = embedder.embed_chunks(chunks)
+
+        # Embed in batches so progress advances from 50% → 70% visibly
+        _EMBED_BATCH = 256
+        chunk_embeddings: list[tuple] = []
+        for i in range(0, len(chunks), _EMBED_BATCH):
+            batch = chunks[i : i + _EMBED_BATCH]
+            chunk_embeddings.extend(embedder.embed_chunks(batch))
+            _jobs[job_id]["progress"] = round(
+                0.50 + 0.20 * min((i + _EMBED_BATCH) / len(chunks), 1.0), 2
+            )
 
         _jobs[job_id]["progress"] = 0.70
         vs = _get_vector_store()
