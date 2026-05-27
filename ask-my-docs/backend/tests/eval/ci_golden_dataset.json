@@ -1,0 +1,27 @@
+[
+  {
+    "question": "What is RAG and why is it useful for AI applications?",
+    "ground_truth": "RAG (Retrieval-Augmented Generation) is a technique that constructs context specific to each query by retrieving relevant information from external memory, rather than using the same context for all queries. It helps AI models avoid hallucination and make fewer mistakes by supplying them with the relevant information needed to answer a given query — since models are more likely to make mistakes when they lack context.",
+    "relevant_pages": [276, 277, 278]
+  },
+  {
+    "question": "What are the two main components of a RAG system?",
+    "ground_truth": "A RAG system has two components: a retriever that retrieves information from external memory sources, and a generator that generates a response based on the retrieved information.",
+    "relevant_pages": [279]
+  },
+  {
+    "question": "What is the difference between sparse and dense retrieval algorithms?",
+    "ground_truth": "Sparse retrievers represent data using sparse vectors where the majority of values are 0. Term-based retrieval is sparse because each term is represented as a one-hot vector of vocabulary size. Dense retrievers (embedding-based) represent data as dense embedding vectors where most values are non-zero. The book uses the terms 'term-based' versus 'embedding-based' rather than sparse versus dense.",
+    "relevant_pages": [281]
+  },
+  {
+    "question": "What is IDF and how does it help term-based retrieval?",
+    "ground_truth": "IDF stands for Inverse Document Frequency. It is a metric that measures how informative a term is by considering how many documents contain it — the more documents a term appears in, the less informative it is. Common words like 'for' and 'at' appear in most documents so they have low IDF, while rare and domain-specific terms have high IDF. IDF is used in combination with term frequency (TF) in algorithms like BM25 to weight terms by their informativeness.",
+    "relevant_pages": [282]
+  },
+  {
+    "question": "What is a vector database and why is it needed for embedding-based retrieval?",
+    "ground_truth": "A vector database stores embeddings generated from document chunks. During indexing, chunks are converted to embeddings and stored in the vector database. At query time, the query is converted to an embedding using the same model, and the vector database finds the k closest document embeddings to the query embedding. The hard part of a vector database is vector search — indexing and storing vectors in a way that makes similarity search fast and efficient.",
+    "relevant_pages": [284, 285]
+  }
+]

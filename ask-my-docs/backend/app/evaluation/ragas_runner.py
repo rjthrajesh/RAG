@@ -236,9 +236,11 @@ class RAGASRunner:
 
 
 if __name__ == "__main__":
+    import os
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s — %(message)s")
     runner = RAGASRunner()
-    report = runner.run_eval()
+    dataset_path = os.environ.get("EVAL_DATASET_PATH", str(_DATASET_PATH))
+    report = runner.run_eval(dataset_path=dataset_path)
 
     print("\n=== RAGAS Evaluation Results ===")
     print(f"  Faithfulness:      {report.faithfulness:.3f}  (threshold ≥ {settings.eval_faithfulness_threshold})")

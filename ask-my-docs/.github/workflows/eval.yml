@@ -35,6 +35,8 @@ jobs:
       # Eval thresholds (must match .env / config.py defaults)
       EVAL_FAITHFULNESS_THRESHOLD: "0.75"
       EVAL_ANSWER_RELEVANCY_THRESHOLD: "0.70"
+      # Use CI-specific dataset scoped to the 10-page PDF fixture
+      EVAL_DATASET_PATH: tests/eval/ci_golden_dataset.json
 
     steps:
       - uses: actions/checkout@v4
