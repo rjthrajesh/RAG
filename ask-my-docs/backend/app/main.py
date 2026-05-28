@@ -31,6 +31,19 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Ask My Docs", version="0.1.0")
 
+
+@app.on_event("startup")
+async def _warm_up_models() -> None:
+    """Force model download/load at startup so ingestion never hangs mid-job."""
+    import asyncio
+    loop = asyncio.get_event_loop()
+    logger.info("Warming up embedding model (%s)…", settings.embed_model_name)
+    await loop.run_in_executor(None, lambda: _get_embedder().model)
+    logger.info("Warming up reranker model…")
+    await loop.run_in_executor(None, lambda: _get_reranker().ranker)
+    logger.info("Model warm-up complete")
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -134,25 +147,27 @@ def _run_ingestion(job_id: str, pdf_path: str) -> None:
             chunk_overlap=settings.chunk_overlap,
         ).chunk(pages)
 
+        # Embed in batches (progress 50%→70%) then write to ChromaDB in one shot
+        # (progress 70%→90%). A single ChromaDB write means one HNSW index build;
+        # multiple incremental writes rebuild the index each time, which is much slower.
         _jobs[job_id]["progress"] = 0.50
         embedder = _get_embedder()
 
-        # Embed in batches so progress advances from 50% → 70% visibly
-        _EMBED_BATCH = 256
-        chunk_embeddings: list[tuple] = []
-        for i in range(0, len(chunks), _EMBED_BATCH):
-            batch = chunks[i : i + _EMBED_BATCH]
-            chunk_embeddings.extend(embedder.embed_chunks(batch))
+        _BATCH = 256
+        all_embeddings: list[tuple] = []
+        for i in range(0, len(chunks), _BATCH):
+            batch = chunks[i : i + _BATCH]
+            all_embeddings.extend(embedder.embed_chunks(batch))
             _jobs[job_id]["progress"] = round(
-                0.50 + 0.20 * min((i + _EMBED_BATCH) / len(chunks), 1.0), 2
+                0.50 + 0.20 * min((i + _BATCH) / len(chunks), 1.0), 2
             )
 
         _jobs[job_id]["progress"] = 0.70
         vs = _get_vector_store()
         vs.delete_all()
         vs.add_chunks(
-            [ce[0] for ce in chunk_embeddings],
-            [ce[1] for ce in chunk_embeddings],
+            [ce[0] for ce in all_embeddings],
+            [ce[1] for ce in all_embeddings],
         )
 
         _jobs[job_id]["progress"] = 0.90
