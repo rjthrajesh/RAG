@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     # Storage
     bm25_index_path: str = "./data/bm25_index.json"
 
+    # CORS — comma-separated list of allowed origins
+    cors_origins: str = "http://localhost:3000,https://rag-xi-ashy.vercel.app"
+
     # Evaluation thresholds
     eval_faithfulness_threshold: float = 0.75
     eval_answer_relevancy_threshold: float = 0.70

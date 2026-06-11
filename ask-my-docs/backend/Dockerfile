@@ -14,4 +14,6 @@ RUN python -c "from flashrank import Ranker; Ranker('ms-marco-MiniLM-L-12-v2', c
 
 COPY app/ ./app/
 
+RUN mkdir -p /app/data
+
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

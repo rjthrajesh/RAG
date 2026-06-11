@@ -1,0 +1,54 @@
+# Standalone compose for Oracle Cloud A1 (ARM64 — free tier 4 OCPU / 24 GB RAM).
+# Does NOT extend docker-compose.yml. Run it alone:
+#
+#   docker compose -f docker-compose.oci.yml up -d --build
+#
+# Prerequisites in .env:
+#   LLM_PROVIDER=groq
+#   GROQ_API_KEY=...
+#   CORS_ORIGINS=http://localhost:3000,https://<your-vercel-app>.vercel.app
+#
+# Frontend stays on Vercel. Set NEXT_PUBLIC_API_URL=http://<oci-public-ip>
+# in your Vercel project environment variables.
+
+services:
+  backend:
+    build:
+      context: ./backend
+      platforms:
+        - linux/arm64
+    env_file: .env
+    environment:
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - BM25_INDEX_PATH=/app/data/bm25_index.json
+    volumes:
+      - backend_data:/app/data
+    depends_on:
+      - chromadb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  chromadb:
+    image: chromadb/chroma:0.5.3
+    volumes:
+      - chroma_data:/chroma/chroma
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.oci.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  backend_data:
+  chroma_data:

@@ -6,7 +6,12 @@ export async function GET(
   _req: Request,
   { params }: { params: { jobId: string } },
 ) {
-  const upstream = await fetch(`${BACKEND}/ingest/status/${params.jobId}`);
-  const data = await upstream.json();
-  return Response.json(data, { status: upstream.status });
+  try {
+    const upstream = await fetch(`${BACKEND}/ingest/status/${params.jobId}`);
+    const data = await upstream.json();
+    return Response.json(data, { status: upstream.status });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "upstream error";
+    return Response.json({ error: msg }, { status: 502 });
+  }
 }

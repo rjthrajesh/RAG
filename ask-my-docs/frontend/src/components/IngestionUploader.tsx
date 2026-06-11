@@ -17,6 +17,8 @@ export function IngestionUploader({ onComplete }: IngestionUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; });
 
   const handleFile = useCallback(async (f: File) => {
     if (!f.name.toLowerCase().endsWith(".pdf")) {
@@ -46,7 +48,7 @@ export function IngestionUploader({ onComplete }: IngestionUploaderProps) {
         if (s.status === "done") {
           clearInterval(pollRef.current!);
           setUploading(false);
-          setTimeout(onComplete, 1200);
+          setTimeout(() => onCompleteRef.current(), 1200);
         } else if (s.status === "failed") {
           clearInterval(pollRef.current!);
           setUploading(false);
@@ -60,7 +62,7 @@ export function IngestionUploader({ onComplete }: IngestionUploaderProps) {
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [jobId, onComplete]);
+  }, [jobId]);
 
   const onDrop = useCallback(
     (e: React.DragEvent) => {
