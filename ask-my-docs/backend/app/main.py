@@ -9,7 +9,6 @@ import uuid
 from pathlib import Path
 from typing import Any, AsyncIterator
 
-import httpx
 from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -63,7 +62,7 @@ _bm25_store: BM25Store | None = None
 _embedder: Embedder | None = None
 _retriever: HybridRetriever | None = None
 _reranker: CrossEncoderReranker | None = None
-_llm_client: OllamaClient | None = None
+_llm_client: OllamaClient | GroqClient | None = None
 
 
 def _get_vector_store() -> VectorStore:
@@ -130,6 +129,7 @@ def _get_llm_client() -> OllamaClient | GroqClient:
 # ---------------------------------------------------------------------------
 
 def _run_ingestion(job_id: str, pdf_path: str) -> None:
+    import gc
     global _retriever  # reset so the next query picks up the new index
     try:
         t0 = time.time()
@@ -144,28 +144,28 @@ def _run_ingestion(job_id: str, pdf_path: str) -> None:
             chunk_overlap=settings.chunk_overlap,
         ).chunk(pages)
 
-        # Embed in batches (progress 50%→70%) then write to ChromaDB in one shot
-        # (progress 70%→90%). A single ChromaDB write means one HNSW index build;
-        # multiple incremental writes rebuild the index each time, which is much slower.
+        # Embed and write to Qdrant in small batches so peak RAM stays bounded.
+        # Each batch is embedded then immediately committed — no full-corpus
+        # embedding list is held in memory. gc.collect() after each batch
+        # releases ONNX activation tensors before the next forward pass.
         _jobs[job_id]["progress"] = 0.50
         embedder = _get_embedder()
-
-        _BATCH = 256
-        all_embeddings: list[tuple] = []
-        for i in range(0, len(chunks), _BATCH):
-            batch = chunks[i : i + _BATCH]
-            all_embeddings.extend(embedder.embed_chunks(batch))
-            _jobs[job_id]["progress"] = round(
-                0.50 + 0.20 * min((i + _BATCH) / len(chunks), 1.0), 2
-            )
-
-        _jobs[job_id]["progress"] = 0.70
         vs = _get_vector_store()
         vs.delete_all()
-        vs.add_chunks(
-            [ce[0] for ce in all_embeddings],
-            [ce[1] for ce in all_embeddings],
-        )
+
+        batch_size = settings.ingestion_batch_size
+        for i in range(0, len(chunks), batch_size):
+            batch = chunks[i : i + batch_size]
+            embedded = embedder.embed_chunks(batch)
+            vs.add_chunks(
+                [ce[0] for ce in embedded],
+                [ce[1] for ce in embedded],
+            )
+            del embedded
+            gc.collect()
+            _jobs[job_id]["progress"] = round(
+                0.50 + 0.40 * min((i + batch_size) / len(chunks), 1.0), 2
+            )
 
         _jobs[job_id]["progress"] = 0.90
         bm25 = _get_bm25_store()
@@ -315,19 +315,11 @@ async def ingest_status(job_id: str) -> dict:
 
 @app.get("/health")
 async def health() -> dict:
-    chroma_ok = False
+    qdrant_ok = False
     try:
-        _get_vector_store()._client.heartbeat()
-        chroma_ok = True
+        _get_vector_store()._client.get_collections()
+        qdrant_ok = True
     except Exception:
         pass
 
-    ollama_ok = False
-    try:
-        async with httpx.AsyncClient(timeout=3.0) as client:
-            r = await client.get(f"{settings.ollama_base_url}/api/tags")
-            ollama_ok = r.status_code == 200
-    except Exception:
-        pass
-
-    return {"status": "ok", "ollama": ollama_ok, "chroma": chroma_ok}
+    return {"status": "ok", "qdrant": qdrant_ok}

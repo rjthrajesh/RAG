@@ -6,13 +6,8 @@ services:
     volumes:
       - ./data:/data
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
-      - CHROMA_HOST=chromadb
-      - CHROMA_PORT=8000
       - BM25_INDEX_PATH=/data/bm25_index.json
-    depends_on:
-      - chromadb
-      - ollama
+    env_file: .env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -27,28 +22,3 @@ services:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
     depends_on:
       - backend
-
-  chromadb:
-    image: chromadb/chroma:0.5.3
-    ports:
-      - "8001:8000"
-    volumes:
-      - ./data/chroma:/chroma/chroma
-
-  ollama:
-    image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_models:/root/.ollama
-    # For GPU support, uncomment:
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: 1
-    #           capabilities: [gpu]
-
-volumes:
-  ollama_models:

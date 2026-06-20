@@ -24,9 +24,12 @@ class Settings(BaseSettings):
     # Judge model for RAGAS evaluation (needs to handle complex nested JSON schemas)
     groq_judge_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
 
-    # ChromaDB
-    chroma_host: str = "localhost"
-    chroma_port: int = 8001
+    # Qdrant Cloud vector store
+    qdrant_url: str = "http://localhost:6333"
+    qdrant_api_key: str = ""
+    # Must match the output dimension of embed_model_name.
+    # bge-small-en-v1.5 → 384, bge-base-en-v1.5 → 768
+    qdrant_vector_size: int = 384
 
     # Embedding
     embed_model_name: str = "BAAI/bge-base-en-v1.5"
@@ -41,6 +44,11 @@ class Settings(BaseSettings):
 
     # Storage
     bm25_index_path: str = "./data/bm25_index.json"
+
+    # Ingestion — chunks embedded and written to the vector store per batch.
+    # Lower values reduce peak RAM at the cost of slightly longer ingestion time.
+    # 32 keeps peak memory well under 512 MB on Railway free tier.
+    ingestion_batch_size: int = 32
 
     # CORS — comma-separated list of allowed origins
     cors_origins: str = "http://localhost:3000,https://rag-xi-ashy.vercel.app"

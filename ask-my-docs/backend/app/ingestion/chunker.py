@@ -18,7 +18,7 @@ class Chunk:
     page_number: int
     section_title: str | None
     char_count: int
-    parent_text: str  # 256-char window before+after chunk, capped at page boundaries
+    parent_text: str  # 128-char window before+after chunk, capped at page boundaries
 
 
 class RecursiveChunker:
@@ -112,6 +112,6 @@ class RecursiveChunker:
         pos = page_text.find(chunk_text)
         if pos == -1:
             return chunk_text
-        start = max(0, pos - 256)
-        end = min(len(page_text), pos + len(chunk_text) + 256)
+        start = max(0, pos - 128)
+        end = min(len(page_text), pos + len(chunk_text) + 128)
         return page_text[start:end]

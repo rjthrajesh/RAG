@@ -4,7 +4,7 @@ pydantic-settings==2.2.1
 pymupdf==1.24.3
 fastembed==0.3.6
 flashrank==0.2.9
-chromadb==0.5.3
+qdrant-client==1.9.1
 rank-bm25==0.2.2
 httpx==0.27.0
 python-multipart==0.0.9

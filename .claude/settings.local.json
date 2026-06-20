@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Bash(python3.11 -m pip list)",
+      "Bash(.rag/bin/python *)",
+      "Bash(kill 81147)"
+    ]
+  }
+}

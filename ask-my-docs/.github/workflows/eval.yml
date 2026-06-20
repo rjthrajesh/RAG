@@ -10,32 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      chromadb:
-        image: chromadb/chroma:0.5.3
+      qdrant:
+        image: qdrant/qdrant:latest
         ports:
-          - "8001:8000"
+          - "6333:6333"
 
     env:
-      # LLM — Groq replaces Ollama; no local GPU/model download needed
       LLM_PROVIDER: groq
       GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       GROQ_MODEL: llama-3.1-8b-instant
-      # Judge model for RAGAS — Llama 4 Scout handles complex nested JSON schemas reliably
       GROQ_JUDGE_MODEL: meta-llama/llama-4-scout-17b-16e-instruct
-      # ChromaDB (service above maps container :8000 → host :8001)
-      CHROMA_HOST: localhost
-      CHROMA_PORT: 8001
-      # Retrieval & chunking
-      EMBED_MODEL_NAME: BAAI/bge-base-en-v1.5
+      QDRANT_URL: http://localhost:6333
+      QDRANT_API_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIiwic3ViamVjdCI6ImFwaS1rZXk6ZDk0OGZhMWItZDg5NS00NTRkLWJhMmEtZTRmNjY2MWNiYjM4In0.R5ievx1Xc4dkw1fLzjddgmV9GPD8RqzvDEdd9yj_cLY"
+      QDRANT_VECTOR_SIZE: "384"
+      EMBED_MODEL_NAME: BAAI/bge-small-en-v1.5
       BM25_INDEX_PATH: ./data/bm25_index.json
-      CHUNK_SIZE: 512
-      CHUNK_OVERLAP: 64
-      TOP_K_RETRIEVE: 20
-      TOP_K_RERANK: 5
-      # Eval thresholds (must match .env / config.py defaults)
+      CHUNK_SIZE: "512"
+      CHUNK_OVERLAP: "64"
+      TOP_K_RETRIEVE: "20"
+      TOP_K_RERANK: "5"
+      INGESTION_BATCH_SIZE: "32"
       EVAL_FAITHFULNESS_THRESHOLD: "0.75"
       EVAL_ANSWER_RELEVANCY_THRESHOLD: "0.70"
-      # Use CI-specific dataset scoped to the 10-page PDF fixture
       EVAL_DATASET_PATH: tests/eval/ci_golden_dataset.json
 
     steps:
@@ -51,7 +47,6 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          # Bust cache only when the embedding model name changes
           key: hf-${{ env.EMBED_MODEL_NAME }}-${{ runner.os }}
 
       - name: Install Python dependencies
@@ -68,7 +63,7 @@ jobs:
       - name: Create data directory
         run: mkdir -p backend/data
 
-      - name: Ingest PDF fixture into ChromaDB
+      - name: Ingest PDF fixture into Qdrant
         working-directory: backend
         run: |
           python - <<'EOF'
@@ -81,16 +76,22 @@ jobs:
           from app.ingestion.embedder import Embedder
           from app.retrieval.vector_store import VectorStore
           from app.retrieval.bm25_store import BM25Store
+          import gc
 
           pdf = pathlib.Path("../tests/fixtures/ai_engineering_excerpt.pdf")
           pages = PDFParser().parse(str(pdf))
           chunks = RecursiveChunker(settings.chunk_size, settings.chunk_overlap).chunk(pages)
-          embedder = Embedder(settings.embed_model_name)
-          chunk_embeddings = embedder.embed_chunks(chunks)
 
+          embedder = Embedder(settings.embed_model_name)
           vs = VectorStore()
           vs.delete_all()
-          vs.add_chunks([ce[0] for ce in chunk_embeddings], [ce[1] for ce in chunk_embeddings])
+
+          for i in range(0, len(chunks), settings.ingestion_batch_size):
+              batch = chunks[i : i + settings.ingestion_batch_size]
+              embedded = embedder.embed_chunks(batch)
+              vs.add_chunks([ce[0] for ce in embedded], [ce[1] for ce in embedded])
+              del embedded
+              gc.collect()
 
           bm25 = BM25Store()
           bm25.build(chunks)
