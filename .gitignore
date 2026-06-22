@@ -1,0 +1,15 @@
+# Python virtual environments
+.rag/
+.venv/
+venv/
+env/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Environment files with secrets
+.env
+
+# macOS
+.DS_Store
